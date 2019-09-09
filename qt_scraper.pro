@@ -1,28 +1,24 @@
 TEMPLATE = lib
-CONFIG += plugin
+CONFIG += plugin release
 QT += qml quick
 
-DESTDIR = ../QtScraper
-TARGET = $$qtLibraryTarget(qtscraperplugin)
+DESTDIR = /usr/lib/qt/qml/QtScraper
+TARGET = qtscraperplugin
 
 HEADERS += webscraper.h \
-          qtscraperplugin.h
+           qtscraperplugin.h
 
 SOURCES += webscraper.cpp \
-          qtscraperplugin.cpp
-
-DESTPATH= ../QtScraper
-
-target.path=$$DESTPATH
-qmldir.files=$$PWD/qmldir
-qmldir.path=$$DESTPATH
-INSTALLS += target qmldir
-
-CONFIG += install_ok  # Do not cargo-cult this!
+           qtscraperplugin.cpp
 
 OTHER_FILES += qmldir
 
-# Copy the qmldir file to the same folder as the plugin binary
-cpqmldir.files = qmldir
-cpqmldir.path = $$DESTDIR
-COPIES += cpqmldir
+qmldir.files = qmldir
+
+qml.path += $$[DESTDIR]
+target.path += $$[DESTDIR]
+pluginfiles.path += $$[DESTDIR]
+
+INSTALLS += target qml qmldirfiles
+
+CONFIG += install_ok  # Do not cargo-cult this!

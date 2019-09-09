@@ -4,5 +4,5 @@
 
 void QtScraperPlugin::registerTypes(const char *uri)
 {
-    qmlRegisterType<WebScraper>(uri, 1, 0, "WebScraper");
+    qmlRegisterType<WebScraper>(uri, 1, 0, "com.ifba.WebScraper");
 }
