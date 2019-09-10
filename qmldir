@@ -1,2 +1,3 @@
-module com.ifba.WebScraper
-plugin qtscraperplugin
+module QtWebScraper
+plugin qtwebscraper-plugin
+classname WebScraper
