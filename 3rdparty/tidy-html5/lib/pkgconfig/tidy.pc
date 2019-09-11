@@ -1,0 +1,11 @@
+prefix=/home/eliakin/dev/projetos_faculdade/tcc/qt-scraper-dir/QtScrapper/3rdparty/libs
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+
+Name: tidy
+Description: tidy - HTML syntax checker
+URL: http://www.html-tidy.org
+Version: 5.7.28
+Libs: -L${libdir} -ltidy
+Cflags: -I${includedir}
