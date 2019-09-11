@@ -1,4 +1,5 @@
 #include "webscraper.h"
+#include "tidy.h"
 
 WebScraper::WebScraper(QObject *parent) : QObject(parent)
 {
