@@ -3,6 +3,9 @@
 
 #include <QObject>
 
+class QNetworkReply;
+class QNetworkAccessManager;
+
 class WebScraper : public QObject
 {
     Q_OBJECT
@@ -11,8 +14,13 @@ public:
     explicit WebScraper(QObject *parent = nullptr);
     QString url() const;
     void setUrl(const QString &url);
+    Q_INVOKABLE void doRequest(const QString &httpMethod);
+public slots:
+    void replyFinished (QNetworkReply *reply);
 private:
+    fromByteArrayToXml()
     QString m_url;
+    QNetworkAccessManager *manager;
 };
 
 #endif // WEBSCRAPER_H
