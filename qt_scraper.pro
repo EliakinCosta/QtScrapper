@@ -1,6 +1,6 @@
 TEMPLATE = lib
 TARGET = qtwebscraper-plugin
-QT += qml quick
+QT += qml quick network
 CONFIG += plugin c++11
 
 TARGET = $$qtLibraryTarget($$TARGET)
