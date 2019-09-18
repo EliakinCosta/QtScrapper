@@ -2,6 +2,7 @@
 
 #include <QNetworkReply>
 #include <QNetworkAccessManager>
+#include <QTextCodec>
 
 #include "tidy.h"
 
@@ -20,18 +21,26 @@ void WebScraper::setUrl(const QString &url)
     m_url = url;
 }
 
-void WebScraper::doRequest(const QString &httpMethod)
+QString WebScraper::httpMethod() const
+{
+    return m_httpMethod;
+}
+
+void  WebScraper::setHttpMethod(const QString &httpMethod)
+{
+    m_httpMethod = httpMethod;
+}
+
+void WebScraper::doRequest()
 {
     this->manager = new QNetworkAccessManager(this);
 
     connect(this->manager, SIGNAL(finished(QNetworkReply*)),
             this, SLOT(replyFinished(QNetworkReply*)));
 
-    if (httpMethod == "get")
+    if (m_httpMethod == "get")
         manager->get(QNetworkRequest(QUrl("http://testing-ground.scraping.pro/table")));
 }
-
-// -------------Slots --------------------
 
 void WebScraper::replyFinished (QNetworkReply *reply)
 {
@@ -48,15 +57,13 @@ void WebScraper::replyFinished (QNetworkReply *reply)
         qDebug() << reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
         qDebug() << reply->attribute(QNetworkRequest::HttpReasonPhraseAttribute).toString();
 
-        QFile *file = new QFile("C:/Qt/Dummy/downloaded.txt");
-        if(file->open(QFile::Append))
-        {
-            file->write(reply->readAll());
-            file->flush();
-            file->close();
-        }
-        delete file;
+        qDebug() << fromByteArrayToString(reply->readAll());
     }
 
     reply->deleteLater();
+}
+
+QString WebScraper::fromByteArrayToString(QByteArray html)
+{
+   return QTextCodec::codecForName("iso-8859-1")->toUnicode(html);
 }

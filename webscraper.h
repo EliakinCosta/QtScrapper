@@ -10,16 +10,20 @@ class WebScraper : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(QString url READ url WRITE setUrl)
+    Q_PROPERTY(QString httpMethod READ httpMethod WRITE setHttpMethod)
 public:
     explicit WebScraper(QObject *parent = nullptr);
     QString url() const;
     void setUrl(const QString &url);
-    Q_INVOKABLE void doRequest(const QString &httpMethod);
+    QString httpMethod() const;
+    void setHttpMethod(const QString &url);
+    Q_INVOKABLE void doRequest();
 public slots:
     void replyFinished (QNetworkReply *reply);
 private:
-    fromByteArrayToXml()
+    QString fromByteArrayToString(QByteArray html);
     QString m_url;
+    QString m_httpMethod;
     QNetworkAccessManager *manager;
 };
 
