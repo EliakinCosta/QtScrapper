@@ -22,6 +22,7 @@ public slots:
     void replyFinished (QNetworkReply *reply);
 private:
     QString fromByteArrayToString(QByteArray html);
+    QString fromHtmlToXml(QString html);
     QString m_url;
     QString m_httpMethod;
     QNetworkAccessManager *manager;

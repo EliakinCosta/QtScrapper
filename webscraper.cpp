@@ -3,8 +3,10 @@
 #include <QNetworkReply>
 #include <QNetworkAccessManager>
 #include <QTextCodec>
+#include <QString>
 
 #include "tidy.h"
+#include "tidybuffio.h"
 
 WebScraper::WebScraper(QObject *parent) : QObject(parent)
 {
@@ -57,7 +59,7 @@ void WebScraper::replyFinished (QNetworkReply *reply)
         qDebug() << reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
         qDebug() << reply->attribute(QNetworkRequest::HttpReasonPhraseAttribute).toString();
 
-        qDebug() << fromByteArrayToString(reply->readAll());
+        qDebug() << fromHtmlToXml(fromByteArrayToString(reply->readAll()));
     }
 
     reply->deleteLater();
@@ -66,4 +68,20 @@ void WebScraper::replyFinished (QNetworkReply *reply)
 QString WebScraper::fromByteArrayToString(QByteArray html)
 {
    return QTextCodec::codecForName("iso-8859-1")->toUnicode(html);
+}
+
+QString WebScraper::fromHtmlToXml(QString html)
+{
+    TidyDoc tdoc = tidyCreate();
+    tidyOptSetBool(tdoc, TidyXmlOut, yes);
+    tidyOptSetBool(tdoc, TidyQuiet, yes);
+    tidyOptSetBool(tdoc, TidyNumEntities, yes);
+    tidyOptSetBool(tdoc, TidyShowWarnings, no);
+
+    tidyParseString(tdoc, html.toUtf8());
+    tidyCleanAndRepair(tdoc);
+    TidyBuffer output = {nullptr, nullptr, 0, 0, 0};
+    tidySaveBuffer(tdoc, &output);
+
+    return QString::fromUtf8(reinterpret_cast<const char*>(output.bp));
 }
