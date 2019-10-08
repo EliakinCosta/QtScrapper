@@ -83,5 +83,5 @@ QString WebScraper::fromHtmlToXml(QString html)
     TidyBuffer output = {nullptr, nullptr, 0, 0, 0};
     tidySaveBuffer(tdoc, &output);
 
-    return QString::fromUtf8(reinterpret_cast<const char*>(output.bp));
+    return reinterpret_cast<const char*>(output.bp);
 }
