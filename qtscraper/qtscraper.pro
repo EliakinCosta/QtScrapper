@@ -1,6 +1,6 @@
 TEMPLATE = subdirs
 
-SUBDIRS += \
-    tests \
-    qt_scraper
+CONFIG += ordered
+
+SUBDIRS = qt_scraper tests
 
