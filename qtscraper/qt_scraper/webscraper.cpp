@@ -10,7 +10,7 @@
 
 WebScraper::WebScraper(QObject *parent) : QObject(parent)
 {
-
+    m_status = "WAITING";
 }
 
 QString WebScraper::url() const
@@ -28,20 +28,39 @@ QString WebScraper::httpMethod() const
     return m_httpMethod;
 }
 
+QString WebScraper::html() const
+{
+    return m_html;
+}
+
 void  WebScraper::setHttpMethod(const QString &httpMethod)
 {
     m_httpMethod = httpMethod;
 }
 
+QString WebScraper::status() const
+{
+    return m_status;
+}
+
+void WebScraper::setStatus(QString status)
+{
+    if (m_status != status) {
+        m_status = status;
+        emit statusChanged(m_status);
+    }
+}
+
 void WebScraper::doRequest()
 {
+    setStatus("RUNNING");
     this->manager = new QNetworkAccessManager(this);
 
     connect(this->manager, SIGNAL(finished(QNetworkReply*)),
             this, SLOT(replyFinished(QNetworkReply*)));
 
     if (m_httpMethod == "get")
-        manager->get(QNetworkRequest(QUrl("http://testing-ground.scraping.pro/table")));
+        manager->get(QNetworkRequest(QUrl(m_url)));
 }
 
 void WebScraper::replyFinished (QNetworkReply *reply)
@@ -50,6 +69,8 @@ void WebScraper::replyFinished (QNetworkReply *reply)
     {
         qDebug() << "ERROR!";
         qDebug() << reply->errorString();
+        setStatus("ERROR");
+        return;
     }
     else
     {
@@ -59,7 +80,10 @@ void WebScraper::replyFinished (QNetworkReply *reply)
         qDebug() << reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
         qDebug() << reply->attribute(QNetworkRequest::HttpReasonPhraseAttribute).toString();
 
-        qDebug() << fromHtmlToXml(fromByteArrayToString(reply->readAll()));
+        qDebug() << fromByteArrayToString(reply->readAll());
+        m_html = fromByteArrayToString(reply->readAll());        
+        setStatus("READY");
+        qDebug() << this->status();
     }
 
     reply->deleteLater();
