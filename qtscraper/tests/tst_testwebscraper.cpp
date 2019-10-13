@@ -1,6 +1,8 @@
 #include <QtTest>
+#include <QDebug>
 
 // add necessary includes here
+#include "webscraper.h"
 
 class TestWebScraper : public QObject
 {
@@ -8,10 +10,10 @@ class TestWebScraper : public QObject
 
 public:
     TestWebScraper();
-    ~TestWebScraper();
+    virtual ~TestWebScraper();
 
 private slots:
-    void test_case1();
+    void test_simple_scraping();
 
 };
 
@@ -25,11 +27,23 @@ TestWebScraper::~TestWebScraper()
 
 }
 
-void TestWebScraper::test_case1()
+void TestWebScraper::test_simple_scraping()
 {
+    WebScraper scraper;
+    scraper.setUrl("http://testing-ground.scraping.pro/table");
+    scraper.setHttpMethod("get");
+    scraper.doRequest();
 
+    while (scraper.status() != "READY") {
+        qDebug() << scraper.status();
+        QTest::qSleep(2);
+    }
+     QString regex = "<.*?id=\"pStyle\".*?>(.*?)</.*?>";
+     QRegExp re(regex);
+     re.indexIn(scraper.html(), 0);
+     qDebug() << re.cap(1);
 }
 
-QTEST_APPLESS_MAIN(TestWebScraper)
+QTEST_MAIN(TestWebScraper)
 
 #include "tst_testwebscraper.moc"
