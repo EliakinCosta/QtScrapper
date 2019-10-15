@@ -10,3 +10,6 @@ SOURCES +=  tst_testwebscraper.cpp
 
 INCLUDEPATH += ../qt_scraper
 LIBS += -L../qt_scraper -lqtwebscraper-plugin
+
+DISTFILES += \
+    html

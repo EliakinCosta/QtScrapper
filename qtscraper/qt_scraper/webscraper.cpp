@@ -53,45 +53,7 @@ void WebScraper::setStatus(QString status)
 
 void WebScraper::doRequest()
 {
-    setStatus("RUNNING");
-    this->manager = new QNetworkAccessManager(this);
 
-    connect(this->manager, SIGNAL(finished(QNetworkReply*)),
-            this, SLOT(replyFinished(QNetworkReply*)));
-
-    if (m_httpMethod == "get")
-        manager->get(QNetworkRequest(QUrl(m_url)));
-}
-
-void WebScraper::replyFinished (QNetworkReply *reply)
-{
-    if(reply->error())
-    {
-        qDebug() << "ERROR!";
-        qDebug() << reply->errorString();
-        setStatus("ERROR");
-        return;
-    }
-    else
-    {
-        qDebug() << reply->header(QNetworkRequest::ContentTypeHeader).toString();
-        qDebug() << reply->header(QNetworkRequest::LastModifiedHeader).toDateTime().toString();
-        qDebug() << reply->header(QNetworkRequest::ContentLengthHeader).toULongLong();
-        qDebug() << reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
-        qDebug() << reply->attribute(QNetworkRequest::HttpReasonPhraseAttribute).toString();
-
-        qDebug() << fromByteArrayToString(reply->readAll());
-        m_html = fromByteArrayToString(reply->readAll());        
-        setStatus("READY");
-        qDebug() << this->status();
-    }
-
-    reply->deleteLater();
-}
-
-QString WebScraper::fromByteArrayToString(QByteArray html)
-{
-   return QTextCodec::codecForName("iso-8859-1")->toUnicode(html);
 }
 
 QString WebScraper::fromHtmlToXml(QString html)

@@ -8,10 +8,14 @@ uri = QtWebScraper
 
 # Input
 HEADERS += webscraper.h \
-           qtscraperplugin.h
+           inetworkclient.h \
+           qtscraperplugin.h \
+           scrapernetworkclient.h
 
 SOURCES += webscraper.cpp \
-           qtscraperplugin.cpp
+           inetworkclient.cpp \
+           qtscraperplugin.cpp \
+           scrapernetworkclient.cpp
 
 DISTFILES = qmldir
 

@@ -5,6 +5,7 @@
 
 class QNetworkReply;
 class QNetworkAccessManager;
+class INetworkClient;
 
 class WebScraper : public QObject
 {
@@ -24,18 +25,14 @@ public:
     Q_INVOKABLE void doRequest();
 Q_SIGNALS:
     void statusChanged(QString status);
-public slots:
-    void replyFinished (QNetworkReply *reply);
 private:
-    void setStatus(QString status);
-    QString fromByteArrayToString(QByteArray html);
+    void setStatus(QString status);  
     QString fromHtmlToXml(QString html);
 private:    
     QString m_status;
     QString m_url;
     QString m_httpMethod;
-    QString m_html;
-    QNetworkAccessManager *manager;
+    QString m_html;    
 };
 
 #endif // WEBSCRAPER_H
