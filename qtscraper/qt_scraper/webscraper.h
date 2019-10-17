@@ -16,6 +16,7 @@ class WebScraper : public QObject
     Q_PROPERTY(QString status READ status NOTIFY statusChanged)
 public:
     explicit WebScraper(QObject *parent = nullptr);
+    virtual ~WebScraper();
     QString url() const;
     void setUrl(const QString &url);
     QString httpMethod() const;
@@ -23,16 +24,18 @@ public:
     QString status() const;
     QString html() const;
     Q_INVOKABLE void doRequest();
+public slots:
+    void setStatus(QString status);
 Q_SIGNALS:
     void statusChanged(QString status);
-private:
-    void setStatus(QString status);  
+private:      
     QString fromHtmlToXml(QString html);
 private:    
     QString m_status;
     QString m_url;
     QString m_httpMethod;
-    QString m_html;    
+    QString m_html;
+    INetworkClient *m_networkClient;
 };
 
 #endif // WEBSCRAPER_H

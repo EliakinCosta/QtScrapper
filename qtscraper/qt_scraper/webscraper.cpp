@@ -4,13 +4,23 @@
 #include <QNetworkAccessManager>
 #include <QTextCodec>
 #include <QString>
+#include <QObject>
+#include <inetworkclient.h>
 
 #include "tidy.h"
 #include "tidybuffio.h"
 
 WebScraper::WebScraper(QObject *parent) : QObject(parent)
 {
-    m_status = "WAITING";
+    QObject::connect(
+        m_networkClient, SIGNAL(statusChanged(QString)),
+        this,  SLOT(setStatus(QString))
+    );
+}
+
+WebScraper::~WebScraper()
+{
+    delete &m_networkClient;
 }
 
 QString WebScraper::url() const
@@ -53,7 +63,8 @@ void WebScraper::setStatus(QString status)
 
 void WebScraper::doRequest()
 {
-
+    if (m_httpMethod == "get")
+        m_networkClient->get(m_url);
 }
 
 QString WebScraper::fromHtmlToXml(QString html)
