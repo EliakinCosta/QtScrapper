@@ -15,6 +15,7 @@ void ScraperNetworkClient::replyFinished (QNetworkReply *reply)
     {
         qDebug() << "ERROR!";
         qDebug() << reply->errorString();
+        setStatus("ERROR");
         return;
     }
     else
@@ -26,6 +27,7 @@ void ScraperNetworkClient::replyFinished (QNetworkReply *reply)
         qDebug() << reply->attribute(QNetworkRequest::HttpReasonPhraseAttribute).toString();
 
         m_document = fromByteArrayToString(reply->readAll());
+        setStatus("READY");
     }
 
     reply->deleteLater();
@@ -39,6 +41,7 @@ void ScraperNetworkClient::get(QString url)
             this, SLOT(replyFinished(QNetworkReply*)));
 
     m_manager->get(QNetworkRequest(QUrl(url)));
+    setStatus("RUNNING");
 }
 
 QString ScraperNetworkClient::document() const
@@ -49,4 +52,13 @@ QString ScraperNetworkClient::document() const
 QString ScraperNetworkClient::fromByteArrayToString(QByteArray html)
 {
    return QTextCodec::codecForName("iso-8859-1")->toUnicode(html);
+}
+
+void ScraperNetworkClient::setStatus(QString status)
+{
+    if (status != m_status)
+    {
+        m_status = status;
+        emit statusChanged(status);
+    }
 }

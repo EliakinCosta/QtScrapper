@@ -12,7 +12,7 @@ public:
     virtual QString document() const = 0;
 
 signals:
-
+    void statusChanged(QString status);
 public slots:
 };
 

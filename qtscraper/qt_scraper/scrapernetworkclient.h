@@ -15,10 +15,12 @@ public:
 public slots:
     void replyFinished (QNetworkReply *reply);
 private:
+    void setStatus(QString status);
     QString fromByteArrayToString(QByteArray html);
 private:
     QNetworkAccessManager *m_manager;
     QString m_document;
+    QString m_status;
 };
 
 #endif // SCRAPERNETWORKCLIENT_H
